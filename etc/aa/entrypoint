@@ -1,0 +1,36 @@
+#!/bin/bash
+# MAINTAINER Aario <Aario@luexu.com>
+set -e
+
+
+. /etc/aa/entrypointbase
+
+Timezone=${Timezone:-""}
+Host=${Host:-""}
+LogTag=${LogTag:-""}
+GenSslCrt=${GenSslCrt:-""}
+
+
+# ENTRYPOINT_LOG
+#   $file         create log file
+#   console(default)      echo
+aaLog() {
+    AaLog --aalogheader_host "${Host}" --aalogtag "${LogTag}" "$@"
+}
+
+AaAdjustTime "${Timezone}"
+GenSslCrt "${GenSslCrt}"
+
+ 
+RunningSignal ${RunningID:-''}
+
+if [ $# -gt 0 ]; then
+	echo "Running $@"
+	if [ "${1: -12}" == 'redis-server' ]; then
+		su - docker << EOF
+			$@
+EOF
+	else
+		exec "$@"
+	fi
+fi
