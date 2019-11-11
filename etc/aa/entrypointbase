@@ -422,17 +422,12 @@ AaLog() {
 }
 
 AaAdjustTime() {
-    log "Adjusting date... : $(date)"
-
     # root user
     if [ "$(id -u)" != "0" ]; then
-        log "AaAdjustTime requires root privileges"
+        log "error AaAdjustTime requires root privileges"
     else
         local timezoneFile="/usr/share/zoneinfo/$1"     # e.g. Asia/Shanghai
-        if [ -f "$timezoneFile" ]; then
-            yes | cp -f "$timezoneFile" "/etc/localtime"
-            log "change timezone to $1, now is "$(date)
-        fi
+        ln -s "$timezoneFile" "/etc/localtime"
     fi
 
 }
