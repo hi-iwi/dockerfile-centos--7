@@ -427,7 +427,10 @@ AaAdjustTime() {
         log "error AaAdjustTime requires root privileges"
     else
         local timezoneFile="/usr/share/zoneinfo/$1"     # e.g. Asia/Shanghai
-        ln -s "$timezoneFile" "/etc/localtime"
+        if [ -f "$timezoneFile" ]; then
+            rm -f "/etc/localtime"
+            ln -s "$timezoneFile" "/etc/localtime"
+        fi
     fi
 
 }
