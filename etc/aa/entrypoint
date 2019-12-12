@@ -27,7 +27,7 @@ RunningSignal ${RunningID:-''}
 if [ $# -gt 0 ]; then
 	echo "Running $@"
 	if [ "${1: -12}" == 'redis-server' ]; then
-		su - docker << EOF
+		su - Aa << EOF
 			$@
 EOF
 	else
