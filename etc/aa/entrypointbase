@@ -90,57 +90,7 @@ RunningSignal() {
 	echo -e "\nRunningID=$@"
 }
 
-# SSL Certificates  GEN_SSL_CRT
-#   crt2048  crt4096  dhparam2048  dhparam4096
-#   @example
-#       GenSslCrt crt2048 crt4096 dhparam2048 dhparam4096
-#       GenSslCrt crt2048,crt4096,dhparam2048,dhparam4096
-GenSslCrt() {
-    log "Generating SSL Certificate..."
 
-    local ssl_crt_lock_file="/etc/aa/lock/entrypoint_ssl_crt.lock"
-    if [ ! -f "$ssl_crt_lock_file" -a $# -gt 0 ]; then
-        if [ $# -eq 1 ]; then
-            set -- ${1//,/ }
-        fi
-    
-        if [ ! -d "/etc/ssl/certs" -o ! -d "/etc/ssl/private" ]; then
-            mkdir -p /etc/ssl/certs && mkdir -p /etc/ssl/private;
-        fi
-        
-        for crt in $@; do
-            case $crt in
-                crt2048 | "aa_2048.crt" | "2048.crt")
-                    cd "/etc/ssl/certs"
-                    if [ ! -f "/etc/ssl/certs/aa_2048.crt" ]; then
-                        openssl req -new -newkey rsa:2048 -sha256 -nodes -out aa_2048.csr -keyout aa_2048.key -subj "/C=CN/ST=Shanghai/L=Shanghai/O=Aario Ai/OU=Aario/CN=Aa"
-                        openssl x509 -req -days 3650 -sha1 -extensions v3_ca -signkey aa_2048.key -in aa_2048.csr -out aa_2048.crt
-                    fi
-                ;;
-                crt4096 | "aa_4096.crt" | "4096.crt")
-                    cd "/etc/ssl/certs"
-                    if [ ! -f "/etc/ssl/certs/aa_4096.crt" ]; then
-                        openssl req -new -newkey rsa:4096 -sha256 -nodes -out aa_4096.csr -keyout aa_4096.key -subj "/C=CN/ST=Shanghai/L=Shanghai/O=Aario Ai/OU=Aario/CN=Aa"
-                        openssl x509 -req -days 3650 -sha1 -extensions v3_ca -signkey aa_4096.key -in aa_4096.csr -out aa_4096.crt
-                    fi
-                ;;
-                dhparam2048 | "aa_2048.dhparam" | "aa_4096.dhparam")
-                    cd "/etc/ssl/private"
-                    if [ ! -f "/etc/ssl/private/aa_2048.dhparam" ]; then
-                        openssl dhparam -out aa_2048.dhparam 2048
-                    fi
-                ;;
-                dhparam4096 | "aa_4096.dhparam" | "aa_4096.dhparam")
-                    cd "/etc/ssl/private"
-                    if [ ! -f "/etc/ssl/private/aa_4096.dhparam" ]; then
-                        openssl dhparam -out aa_4096.dhparam 4096
-                    fi
-                ;;
-            esac
-        done
-        touch "$ssl_crt_lock_file"
-    fi
-}
 
 # severity lock
 #   lock exists, severity error exists;

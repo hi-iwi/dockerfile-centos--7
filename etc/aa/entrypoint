@@ -1,15 +1,10 @@
 #!/bin/bash
-# MAINTAINER Aario <Aario@luexu.com>
 set -e
-
-
 . /etc/aa/entrypointbase
 
 Timezone=${Timezone:-""}
 Host=${Host:-""}
 LogTag=${LogTag:-""}
-GenSslCrt=${GenSslCrt:-""}
-
 
 # ENTRYPOINT_LOG
 #   $file         create log file
@@ -19,9 +14,7 @@ aaLog() {
 }
 
 AaAdjustTime "${Timezone}"
-GenSslCrt "${GenSslCrt}"
 
- 
 RunningSignal ${RunningID:-''}
 
 if [ $# -gt 0 ]; then
