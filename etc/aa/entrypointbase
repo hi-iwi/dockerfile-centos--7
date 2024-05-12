@@ -24,9 +24,7 @@ ConfigKernel() {
             mkdir "$lock_dir"
         fi
         local lock="$lock_dir/"$(echo "$@" | md5sum | awk -F ' ' '{print $1}')'.lock'
-        if [ -f "$lock" ]; then
-            log "$lock exists"
-        else
+        if [ ! -f "$lock" ]; then
             if [ -w "$1" ]; then
                 local content=$@
                 declare v
@@ -87,6 +85,7 @@ ConfigKernel /etc/security/limits.conf APPEND_LN "root hard core unlimited"
 
 # for `docker logs xxx | tail -1`
 RunningSignal() {
+  echo "$(date '+%Y-%m-%d %H:%M:%S')"
 	echo -e "\nRunningID=$@"
 }
 

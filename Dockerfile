@@ -16,6 +16,9 @@ RUN yum -y update
 RUN yum -y install yum-utils curl
 RUN yum-config-manager --enable extras
 RUN yum -y install centos-release-scl-rh
+RUN rpm --rebuilddb
+RUN yum clean all
+
 # COPY 只能复制当前目录，不复制子目录内容
 COPY ./etc/sysctl.conf /etc/
 COPY --chown=iwi:iwi ./etc/aa/*  /etc/aa/
