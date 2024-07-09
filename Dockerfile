@@ -23,8 +23,6 @@ RUN echo "skip_missing_names_on_install=False" >> /etc/yum.conf
 RUN sed -i '/^override_install_langs=/d' /etc/yum.conf
 RUN yum -y update
 RUN yum -y install yum-utils net-tools curl
-RUN yum-config-manager --enable extras
-RUN yum -y install centos-release-scl-rh
 
 
 # COPY 只能复制当前目录，不复制子目录内容
