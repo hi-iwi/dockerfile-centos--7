@@ -9,12 +9,13 @@ RUN mkdir -p /var/lib/dockervol /var/log/dockervol /etc/aa/lock
 RUN chown -R aario:aario /var/lib/dockervol /var/log/dockervol /etc/aa/lock
 RUN ln -sf /dev/stdout /var/log/dockervol/stdout.log && ln -sf /dev/stderr /var/log/dockervol/stderr.log
 
-# 阿里云yum源非常不稳定
-
-#RUN rm -f /etc/yum.repos.d/*
-#RUN curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-#RUN yum clean all
-#RUN yum makecache
+# centos7 已经停止yum源，必须要替换
+RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
+RUN sed -i 's/plugins=1/plugins=0/' /etc/yum.conf
+RUN rm -f /etc/yum.repos.d/*
+RUN curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+RUN yum clean all
+RUN yum makecache
 RUN echo "multilib_policy=best" >> /etc/yum.conf
 RUN echo "skip_missing_names_on_install=False" >> /etc/yum.conf
 RUN sed -i '/^override_install_langs=/d' /etc/yum.conf
