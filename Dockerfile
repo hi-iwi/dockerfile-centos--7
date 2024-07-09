@@ -20,7 +20,7 @@ RUN echo "multilib_policy=best" >> /etc/yum.conf
 RUN echo "skip_missing_names_on_install=False" >> /etc/yum.conf
 RUN sed -i '/^override_install_langs=/d' /etc/yum.conf
 RUN yum -y update
-RUN yum -y install yum-utils curl
+RUN yum -y install yum-utils net-tools curl
 RUN yum-config-manager --enable extras
 RUN yum -y install centos-release-scl-rh
 RUN rpm --rebuilddb
