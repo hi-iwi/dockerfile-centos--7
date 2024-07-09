@@ -14,8 +14,11 @@ RUN ln -sf /dev/stdout /var/log/dockervol/stdout.log && ln -sf /dev/stderr /var/
 RUN yum-config-manager --enable extras
 RUN yum -y install centos-release-scl-rh
 
-#RUN rm -f /etc/yum.repos.d/*
-#COPY ./yum.repos.d/* /etc/yum.repos.d/
+# mirrorlist 无法访问，使用 mirrors.centos.org
+RUN for repo in /etc/yum.repos.d/* ;   do                 \
+      sed -i 's/^\s*mirrorlist=/# mirrorlist=/' "$repo";  \
+      sed -i 's/^#\s*baseurl=/baseurl=/' "$repo";         \
+    done
 
 RUN rm -f /var/lib/rpm/__db*
 RUN rpm --rebuilddb
