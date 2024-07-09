@@ -11,6 +11,7 @@ RUN ln -sf /dev/stdout /var/log/dockervol/stdout.log && ln -sf /dev/stderr /var/
 
 # 启用阿里云yum 源
 
+RUN rm -f /etc/yum.repos.d/*
 RUN curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 RUN yum clean all
 RUN echo "multilib_policy=best" >> /etc/yum.conf
@@ -26,3 +27,11 @@ RUN yum clean all
 # COPY 只能复制当前目录，不复制子目录内容
 COPY ./etc/sysctl.conf /etc/
 COPY --chown=aario:aario ./etc/aa/*  /etc/aa/
+
+
+# 注意提交到docker 仓库
+# ./docker build centos-7
+# docker login
+# docker tag aario/centos:7 aario/centos:7
+# docker push aario/centos:7
+
