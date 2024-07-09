@@ -14,6 +14,8 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf
 RUN sed -i 's/plugins=1/plugins=0/' /etc/yum.conf
 RUN rm -f /etc/yum.repos.d/*
 RUN curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+RUN rm -f /var/lib/rpm/__db*
+RUN rpm --rebuilddb
 RUN yum clean all
 RUN yum makecache
 RUN echo "multilib_policy=best" >> /etc/yum.conf
@@ -23,7 +25,7 @@ RUN yum -y update
 RUN yum -y install yum-utils net-tools curl
 RUN yum-config-manager --enable extras
 RUN yum -y install centos-release-scl-rh
-RUN rpm --rebuilddb
+
 
 # COPY 只能复制当前目录，不复制子目录内容
 COPY ./etc/sysctl.conf /etc/
