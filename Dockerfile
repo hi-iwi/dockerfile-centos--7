@@ -9,6 +9,10 @@ RUN mkdir -p /var/lib/dockervol /var/log/dockervol /etc/aa/lock
 RUN chown -R aario:aario /var/lib/dockervol /var/log/dockervol /etc/aa/lock
 RUN ln -sf /dev/stdout /var/log/dockervol/stdout.log && ln -sf /dev/stderr /var/log/dockervol/stderr.log
 
+# 启用阿里云yum 源
+
+RUN curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+RUN yum clean all
 RUN echo "multilib_policy=best" >> /etc/yum.conf
 RUN echo "skip_missing_names_on_install=False" >> /etc/yum.conf
 RUN sed -i '/^override_install_langs=/d' /etc/yum.conf
